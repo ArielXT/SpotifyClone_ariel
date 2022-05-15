@@ -40,18 +40,29 @@ class LibraryViewController: UIViewController{
 
 extension LibraryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playListViewModel.playList?.items.count ?? 0
-    }
+           return 1
+       }
+       
+       func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+           let uiView = UIView()
+           uiView.backgroundColor = UIColor(named: "BgDark")
+           return uiView
+       }
+       
+       func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+           return 10
+       }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-        let playList = playListViewModel.playList?.items[indexPath.row]
-        cell.textLabel?.text = playList?.name
-        cell.detailTextLabel?.text = playList?.itemDescription
-        cell.imageView?.image = playList?.images.count ?? 0 > 0
-        ? HelperImage.setImageFromUrl(url: playList?.images[0].url ?? "")
-        : UIImage(systemName: "music.note")
-        return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+            let playList = playListViewModel.playList?.items[indexPath.section]
+            cell.textLabel?.text = playList?.name
+            cell.detailTextLabel?.text = playList?.itemDescription
+            
+            cell.imageView?.image = playList?.images.count ?? 0 > 0
+            ? HelperImage.setImageFromUrl(url: playList?.images[0].url ?? "")
+            : UIImage(named: "music-note")
+            return cell
+        }
+        
     }
-    
-}

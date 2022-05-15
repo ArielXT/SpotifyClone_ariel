@@ -1,15 +1,3 @@
-//
-//  Playlist.swift
-//  SpotifyClone
-//
-//  Created by MAC45 on 10/05/22.
-//
-import Foundation
-
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let playList = try? newJSONDecoder().decode(PlayList.self, from: jsonData)
 import Foundation
 
 // MARK: - PlayList
@@ -17,7 +5,7 @@ struct PlayList: Codable {
     let href: String
     let items: [Item]
     let limit: Int
-    let next: JSONNull?
+    let next: String
     let offset: Int
     let previous: JSONNull?
     let total: Int
@@ -37,7 +25,8 @@ struct Item: Codable {
     let itemPublic: Bool
     let snapshotID: String
     let tracks: Tracks
-    let type, uri: String
+    let type: ItemType
+    let uri: String
 
     enum CodingKeys: String, CodingKey {
         case collaborative
@@ -58,9 +47,9 @@ struct ExternalUrls: Codable {
 
 // MARK: - Image
 struct Image: Codable {
-    let height: Int?
+    let height: JSONNull?
     let url: String
-    let width: Int?
+    let width: JSONNull?
 }
 
 // MARK: - Owner
@@ -68,7 +57,9 @@ struct Owner: Codable {
     let displayName: String
     let externalUrls: ExternalUrls
     let href: String
-    let id, type, uri: String
+    let id: String
+    let type: OwnerType
+    let uri: String
 
     enum CodingKeys: String, CodingKey {
         case displayName = "display_name"
@@ -77,13 +68,22 @@ struct Owner: Codable {
     }
 }
 
+enum OwnerType: String, Codable {
+    case user = "user"
+}
+
 // MARK: - Tracks
 struct Tracks: Codable {
     let href: String
     let total: Int
 }
 
+enum ItemType: String, Codable {
+    case playlist = "playlist"
+}
+
 // MARK: - Encode/decode helpers
+
 class JSONNull: Codable, Hashable {
 
     public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
@@ -99,7 +99,9 @@ class JSONNull: Codable, Hashable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if !container.decodeNil() {
-            throw DecodingError.typeMismatch(JSONNull.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for JSONNull"))
+            throw DecodingError.typeMismatch(JSONNull.self,
+DecodingError.Context(codingPath: decoder.codingPath, debugDescription:
+"Wrong type for JSONNull"))
         }
     }
 
